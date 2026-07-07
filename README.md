@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="figures/header.png" alt="jlens-workspace — J-Lens / Global Workspace Analysis" width="700">
+</p>
+
 # jlens-workspace — Minimal Reproducible Implementation of J-Lens / Global Workspace Analysis
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -12,14 +16,14 @@ Derives from the methodology introduced in Anthropic's **["Verbalizable Represen
 
 - [Overview](#overview)
 - [Key Results](#key-results)
+- [Visualizations](#visualizations)
 - [Quickstart](#quickstart)
 - [How It Works](#how-it-works)
 - [Limitations](#limitations)
 - [Relation to the Original Research](#relation-to-the-original-research)
 - [File Reference](#file-reference)
 - [Extensions and Future Work](#extensions-and-future-work)
-- [License](#license)
-- [Attribution](#attribution)
+- [License and Attribution](#license-and-attribution)
 
 ---
 
@@ -33,7 +37,7 @@ This repository provides a minimal, fully transparent implementation of three co
 
 3. **True multi-layer causal patching** — Perturb the residual stream at a chosen layer and run the remainder of the forward pass through subsequent transformer blocks, rather than projecting directly to logits.
 
-All experiments run on a tiny 3-layer, 48-dimensional transformer trained on a synthetic concept-mapping task: given a cue token (spider → 8 legs, ant → 6 legs), the model must produce the correct leg-count output. This toy setting strips away confounding complexity while preserving the mathematical structure of the analysis.
+All experiments run on a tiny 3-layer, 48-dimensional transformer trained on a synthetic concept-mapping task: given a cue token (spider → 8 legs, ant → 6 legs), the model must produce the correct leg-count output. This simplified setting strips away confounding complexity while preserving the mathematical structure of the analysis.
 
 ---
 
@@ -41,28 +45,62 @@ All experiments run on a tiny 3-layer, 48-dimensional transformer trained on a s
 
 Results from the canonical run (included as `results.json`):
 
+**Post-training layer analysis:**
+
 | Layer | Var Explained (%) | Avg Causal Impact | Max Causal Impact |
 |-------|------------------|-------------------|-------------------|
 | 0     | −0.15            | 0.0030            | 0.0127            |
 | 1     | −0.13            | 0.0032            | 0.0135            |
 | 2     | 0.00             | 0.0015            | 0.0048            |
 
-- **Layer 1** (middle layer) exhibits the highest average causal impact, suggesting it functions as the primary "workspace" layer in this minimal setting.
-- **Example patch** at Layer 1: Base $P(\text{8 legs}) = 99.87\% \to 98.19\%$ after adding the strongest discovered direction ($\Delta \approx -1.7$ percentage points), with a corresponding rise in the 6-legs probability.
-- Pre-training causal impacts are unstructured and low; training sharpens the discovered directions into a coherent subspace.
+**Pre-training** (random weights) showed no structured variance explanation and lower, noisier causal impacts across all layers.
 
-> **Reproducibility:** `results.json` contains exact output from the original run. Running `python jlens_workspace.py` with the same seed (1337) will reproduce equivalent results and overwrite the file.
+- **Ignition layer**: Layer 1 (middle layer) exhibits the highest average causal impact after training, suggesting it functions as the primary "workspace" layer in this minimal setting.
+- **Example patch** at Layer 1: Base $P(\text{8 legs}) = 99.87\% \to 98.19\%$ after adding the strongest discovered direction ($\Delta \approx -1.7$ percentage points), with a corresponding rise in the 6-legs probability.
+- Training qualitatively sharpens the discovered directions into a more structured subspace compared to the random initialization baseline.
+
+> **Reproducibility:** `results.json` contains exact output from the canonical run. Running `python jlens_workspace.py` with the same seed (1337) will reproduce equivalent results and overwrite the file.
+
+---
+
+## Visualizations
+
+The script automatically generates three publication-style figures in `figures/`:
+
+### Variance Explained by Top-k Jacobian Directions
+
+<p align="center">
+  <img src="figures/var_explained.png" alt="Variance explained per layer, pre- vs post-training" width="600">
+</p>
+
+Negative variance explained values indicate that the linear subspace spanned by the top Jacobian directions does not capture activation variance at those layers. This is expected for early layers and underscores the need for nonlinear methods (e.g., sparse autoencoders) in realistic settings.
+
+### Causal Impact per Layer
+
+<p align="center">
+  <img src="figures/causal_impact.png" alt="Average and maximum causal impact per layer, pre- vs post-training" width="700">
+</p>
+
+Post-training, Layer 1 shows the highest average and maximum causal impact — the signature of an emergent workspace-like subspace that mediates downstream computation.
+
+### Training Loss
+
+<p align="center">
+  <img src="figures/training_loss.png" alt="Training loss curve" width="600">
+</p>
+
+The model converges rapidly (loss < 0.01 within 50 steps) on the synthetic concept-mapping task.
 
 ---
 
 ## Quickstart
 
 ```bash
-pip install torch>=2.0.0 numpy>=1.24.0
+pip install torch numpy matplotlib seaborn
 python jlens_workspace.py
 ```
 
-No GPU required. The script prints progress to stdout and writes quantitative results to `results.json`.
+No GPU required. The script prints progress to stdout, writes quantitative results to `results.json`, and saves figures to `figures/`.
 
 ---
 
@@ -99,15 +137,11 @@ Given a discovered direction $d$, we add it (scaled by a strength factor) to the
 
 This implementation is intentionally minimal and carries several limitations:
 
-<div class="limitations">
-
 - **Model scale**: 3 layers, 48 dimensions — orders of magnitude smaller than the models in which workspace subspaces were originally identified. Observed effect sizes are correspondingly modest.
 - **Jacobian approximation**: Finite differences are used instead of exact autograd. While more robust on CPU, this is less accurate and scales poorly with model dimension (requires $2 \times d_{\text{model}}$ forward passes per layer).
 - **Variance explained**: Negative variance-explained values on some layers indicate that the linear subspace spanned by top Jacobian directions does not capture the activation variance at those layers. This is expected for early/random layers but underscores the need for nonlinear methods (e.g., sparse autoencoders) in realistic settings.
 - **Single-prompt analysis**: Directions are computed from a single prompt rather than averaged over a corpus, which may produce prompt-specific rather than general directions.
 - **No broadcast analysis**: The original work identifies dense broadcast connectivity patterns from the workspace layer; this implementation does not measure inter-layer communication.
-
-</div>
 
 ---
 
@@ -136,8 +170,9 @@ This implementation captures the **mathematical skeleton** of these phenomena in
 
 | File | Description |
 |------|-------------|
-| `jlens_workspace.py` | Full experiment script (~270 lines) |
+| `jlens_workspace.py` | Full experiment script (~330 lines) |
 | `results.json` | Quantitative results from the canonical run |
+| `figures/` | Generated visualizations (created on run) |
 | `LICENSE` | MIT License |
 | `requirements.txt` | Python dependencies |
 | `.gitignore` | Standard Python / PyTorch ignores |
@@ -154,15 +189,13 @@ The following extensions would incrementally increase realism and analytical pow
 - **Multi-task training** — Extend the synthetic task to include multiple concept dimensions and test whether distinct subspaces emerge for each.
 - **Inter-layer broadcast analysis** — Measure how perturbations at the ignition layer affect representations at downstream layers via activation projection.
 - **Larger architectures** — Port the analysis to a pretrained open model (e.g., Pythia-70M or GPT-2) using Hugging Face `transformers`, though this requires GPU.
-- **Visualization** — Plot activation trajectories through PCA-reduced residual space and overlay discovered directions.
+- **Activation trajectory visualization** — Plot residual stream trajectories through PCA-reduced space with discovered directions overlaid.
 
 ---
 
-## License
+## License and Attribution
 
 MIT — see [LICENSE](LICENSE).
-
-## Attribution
 
 Originally developed in collaboration with Grok (xAI), 2026.  
 Inspired by Anthropic's *"Verbalizable Representations Form a Global Workspace in Language Models"* (Transformer Circuits, 2026).
