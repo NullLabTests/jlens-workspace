@@ -1,0 +1,45 @@
+{
+  "timestamp": "2026-07-07T01:13:30.543178",
+  "pre_training": {
+    "0": {
+      "var_explained_pct": 0.0,
+      "avg_causal_impact": 0.00975,
+      "max_causal_impact": 0.02489
+    },
+    "1": {
+      "var_explained_pct": 0.0,
+      "avg_causal_impact": 0.00794,
+      "max_causal_impact": 0.01063
+    },
+    "2": {
+      "var_explained_pct": -0.0,
+      "avg_causal_impact": 0.01026,
+      "max_causal_impact": 0.01551
+    }
+  },
+  "post_training": {
+    "0": {
+      "var_explained_pct": -0.15,
+      "avg_causal_impact": 0.00299,
+      "max_causal_impact": 0.01273
+    },
+    "1": {
+      "var_explained_pct": -0.13,
+      "avg_causal_impact": 0.00322,
+      "max_causal_impact": 0.01345
+    },
+    "2": {
+      "var_explained_pct": 0.0,
+      "avg_causal_impact": 0.00149,
+      "max_causal_impact": 0.00481
+    }
+  },
+  "ignition_layer": 1,
+  "example_patch_effect": {
+    "delta_legs8": -0.01675426959991455,
+    "delta_legs6": 0.016872799023985863,
+    "base_p_legs8": 0.9986770749092102,
+    "patched_p_legs8": 0.9819228053092957
+  },
+  "final_loss": 0.0013007245725020766
+}
