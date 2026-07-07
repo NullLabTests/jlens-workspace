@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+*.whl
+*.so
+
+# PyTorch
+*.pt
+*.pth
+*.ckpt
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+venv/
+.venv/
+env/
+
+# Results (tracked in repo, but ignore auto-generated copies)
+# results.json is tracked — add local overrides here
+results_local.json
