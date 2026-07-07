@@ -4,7 +4,14 @@
 
 # jlens-workspace — Minimal Reproducible Implementation of J-Lens / Global Workspace Analysis
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+<p align="center">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="MIT License"></a>
+  <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-3.9+-blue.svg" alt="Python 3.9+"></a>
+  <a href="https://pytorch.org/"><img src="https://img.shields.io/badge/PyTorch-2.0+-ee4c2c.svg" alt="PyTorch 2.0+"></a>
+  <a href="https://github.com/NullLabTests/jlens-workspace"><img src="https://img.shields.io/github/last-commit/NullLabTests/jlens-workspace" alt="Last Commit"></a>
+  <a href="https://github.com/NullLabTests/jlens-workspace"><img src="https://img.shields.io/github/repo-size/NullLabTests/jlens-workspace" alt="Repo Size"></a>
+  <a href="https://github.com/NullLabTests/jlens-workspace/issues"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs Welcome"></a>
+</p>
 
 **A self-contained, CPU-runnable reference implementation** of Jacobian-lens style causal direction discovery, layer-wise subspace analysis, and activation patching in a transformer residual stream.
 
