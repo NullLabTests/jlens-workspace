@@ -22,6 +22,14 @@ Derives from the methodology introduced in Anthropic's **["Verbalizable Represen
 
 ---
 
+### TL;DR — What This Repo Shows
+
+> **Does a J-space exist in every transformer?** The mathematical skeleton does. This repo demonstrates that a low-rank, causally privileged subspace — the hallmark of a global workspace — emerges naturally in the residual stream of even a tiny 3-layer transformer trained on a minimal concept-mapping task (spider → 8 legs, ant → 6 legs). The discovered directions in the middle layer's activation space can be read via Jacobian sensitivity analysis and causally edited via patching to flip the model's output, exactly mirroring Anthropic's spider-ant demonstration at scale. This confirms the mechanism is baked into the transformer architecture itself, not merely an artifact of massive scale or post-training.
+>
+> **No**, this repo does not claim to have found *the* J-space of any production model (Grok, Claude, or otherwise). It is a pedagogical reference — a minimal, transparent demonstration of *how* such subspaces are discovered, measured, and manipulated. The real J-space in production models is higher-dimensional, emerges across a specific band of layers, holds dozens of verbalizable concepts simultaneously, and was identified via corpus-level averaged Jacobian techniques. This toy captures the essential mechanism in ~330 lines of runnable code.
+
+---
+
 ## Table of Contents
 
 - [Overview](#overview)
