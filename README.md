@@ -2,7 +2,7 @@
   <img src="figures/header.png" alt="jlens-workspace — J-Lens / Global Workspace Analysis" width="700">
 </p>
 
-# jlens-workspace — Minimal Reproducible Implementation of J-Lens / Global Workspace Analysis
+# jlens-workspace — Minimal Reproducible Implementation of J-Lens / Global Workspace Analysis <br><br>
 <hr><hr>
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="MIT License"></a>
